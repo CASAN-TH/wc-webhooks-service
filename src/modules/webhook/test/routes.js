@@ -16,7 +16,17 @@ describe('Webhook CRUD routes tests', function () {
 
     before(function (done) {
         mockup = {
-            name: 'name'
+            name: "Order updated",
+            topic: "order.updated",
+            resource: "order",
+            event: "updated",
+            hooks: [
+                "woocommerce_process_shop_order_meta",
+                "woocommerce_api_edit_order",
+                "woocommerce_order_edit_status",
+                "woocommerce_order_status_changed"
+            ],
+            delivery_url: "http://requestb.in/1g0sxmo1"
         };
         credentials = {
             username: 'username',
@@ -32,18 +42,18 @@ describe('Webhook CRUD routes tests', function () {
         done();
     });
 
-    it('should be Webhook get use token', (done)=>{
+    it('should be Webhook get use token', (done) => {
         request(app)
-        .get('/api/webhooks')
-        .set('Authorization', 'Bearer ' + token)
-        .expect(200)
-        .end((err, res)=>{
-            if (err) {
-                return done(err);
-            }
-            var resp = res.body;
-            done();
-        });
+            .get('/api/webhooks')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                var resp = res.body;
+                done();
+            });
     });
 
     it('should be Webhook get by id', function (done) {
@@ -69,13 +79,22 @@ describe('Webhook CRUD routes tests', function () {
                         var resp = res.body;
                         assert.equal(resp.status, 200);
                         assert.equal(resp.data.name, mockup.name);
+                        assert.equal(resp.data.status, mockup.status);
+                        assert.equal(resp.data.topic, mockup.topic);
+                        assert.equal(resp.data.resource, mockup.resource);
+                        assert.equal(resp.data.event, mockup.event);
+                        assert.equal(resp.data.delivery_url, mockup.delivery_url);
+                        assert.equal(resp.data.hooks[0], mockup.hooks[0]);
+                        assert.equal(resp.data.hooks[1], mockup.hooks[1]);
+                        assert.equal(resp.data.hooks[2], mockup.hooks[2]);
+                        assert.equal(resp.data.hooks[3], mockup.hooks[3]);
                         done();
                     });
             });
 
     });
 
-    it('should be Webhook post use token', (done)=>{
+    it('should be Webhook post use token', (done) => {
         request(app)
             .post('/api/webhooks')
             .set('Authorization', 'Bearer ' + token)
@@ -86,7 +105,17 @@ describe('Webhook CRUD routes tests', function () {
                     return done(err);
                 }
                 var resp = res.body;
+                assert.equal(resp.status, 200);
                 assert.equal(resp.data.name, mockup.name);
+                assert.equal(resp.data.status, mockup.status);
+                assert.equal(resp.data.topic, mockup.topic);
+                assert.equal(resp.data.resource, mockup.resource);
+                assert.equal(resp.data.event, mockup.event);
+                assert.equal(resp.data.delivery_url, mockup.delivery_url);
+                assert.equal(resp.data.hooks[0], mockup.hooks[0]);
+                assert.equal(resp.data.hooks[1], mockup.hooks[1]);
+                assert.equal(resp.data.hooks[2], mockup.hooks[2]);
+                assert.equal(resp.data.hooks[3], mockup.hooks[3]);
                 done();
             });
     });
@@ -116,7 +145,17 @@ describe('Webhook CRUD routes tests', function () {
                             return done(err);
                         }
                         var resp = res.body;
+                        assert.equal(resp.status, 200);
                         assert.equal(resp.data.name, update.name);
+                        assert.equal(resp.data.status, mockup.status);
+                        assert.equal(resp.data.topic, mockup.topic);
+                        assert.equal(resp.data.resource, mockup.resource);
+                        assert.equal(resp.data.event, mockup.event);
+                        assert.equal(resp.data.delivery_url, mockup.delivery_url);
+                        assert.equal(resp.data.hooks[0], mockup.hooks[0]);
+                        assert.equal(resp.data.hooks[1], mockup.hooks[1]);
+                        assert.equal(resp.data.hooks[2], mockup.hooks[2]);
+                        assert.equal(resp.data.hooks[3], mockup.hooks[3]);
                         done();
                     });
             });
@@ -144,15 +183,15 @@ describe('Webhook CRUD routes tests', function () {
 
     });
 
-    it('should be webhook get not use token', (done)=>{
+    it('should be webhook get not use token', (done) => {
         request(app)
-        .get('/api/webhooks')
-        .expect(403)
-        .expect({
-            status: 403,
-            message: 'User is not authorized'
-        })
-        .end(done);
+            .get('/api/webhooks')
+            .expect(403)
+            .expect({
+                status: 403,
+                message: 'User is not authorized'
+            })
+            .end(done);
     });
 
     it('should be webhook post not use token', function (done) {
