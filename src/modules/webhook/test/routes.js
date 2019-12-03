@@ -16,8 +16,7 @@ describe('Webhook CRUD routes tests', function () {
 
     before(function (done) {
         mockup = {
-            name: 'Order updated',
-            status: "active",
+            name: "Order updated",
             topic: "order.updated",
             resource: "order",
             event: "updated",
