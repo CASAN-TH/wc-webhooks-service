@@ -6,8 +6,30 @@ var Schema = mongoose.Schema;
 
 var WebhookSchema = new Schema({
     name: {
+        type: String
+    },
+    status: {
         type: String,
-        required: 'Please fill a Webhook name',
+        enum: ['active','paused','disabled'],
+        default: 'active'
+    },
+    topic: {
+        type: String
+    },
+    resource: {
+        type: String
+    },
+    event: {
+        type: String
+    },
+    hooks: {
+        type: []
+    },
+    delivery_url: {
+        type: String
+    },
+    secret: {
+        type: String
     },
     created: {
         type: Date,
